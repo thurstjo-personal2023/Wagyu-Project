@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HalalWagyuBeefCertificate",
+  "description": "Schema for certifying Halal-compliant Wagyu beef in the UAE supply chain, ensuring traceability and authenticity.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique batch or certificate identifier (e.g., UUID or serial number).",
+      "pattern": "^[A-Za-z0-9-]{8}-[A-Za-z0-9-]{4}-[A-Za-z0-9-]{4}-[A-Za-z0-9-]{4}-[A-Za-z0-9-]{12}$"
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Product name (e.g., 'Halal Wagyu Ribeye').",
+          "maxLength": 100
+        },
+        "type": {
+          "type": "string",
+          "enum": ["Beef Cut", "Whole Carcass", "Ground Beef"],
+          "description": "Type of Wagyu product."
+        },
+        "wagyuGrade": {
+          "type": "string",
+          "enum": ["A5", "A4", "A3", "BMS 8-12"],
+          "description": "Wagyu grading (e.g., BMS marbling score)."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Quantity in kg.",
+          "minimum": 0
+        }
+      },
+      "required": ["name", "type", "wagyuGrade", "quantity"]
+    },
+    "halalCompliance": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["Certified", "Compliant"],
+          "description": "Halal certification status."
+        },
+        "slaughterMethod": {
+          "type": "string",
+          "enum": ["Zabiha (Hand-Slaughtered)", "Machine (with Islamic Oversight)"],
+          "description": "Method ensuring no stunning and facing Qibla."
+        },
+        "certifyingBody": {
+          "type": "string",
+          "description": "Name of Halal certifying authority (e.g., 'ESMA-Approved Body').",
+          "maxLength": 100
+        },
+        "certificateNumber": {
+          "type": "string",
+          "description": "Reference number for the Halal certificate.",
+          "pattern": "^[A-Z0-9]{5,20}$"
+        },
+        "segregation": {
+          "type": "boolean",
+          "description": "Confirms no cross-contamination with non-Halal items."
+        },
+        "auditDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Last Halal audit date."
+        }
+      },
+      "required": ["status", "slaughterMethod", "certifyingBody", "segregation"]
+    },
+    "supplyChain": {
+      "type": "object",
+      "properties": {
+        "origin": {
+          "type": "object",
+          "properties": {
+            "farmName": {"type": "string", "description": "Wagyu farm name."},
+            "country": {"type": "string", "enum": ["Japan", "Australia", "USA", "UAE"], "description": "Country of origin."},
+            "gpsCoordinates": {"type": "string", "description": "Farm GPS (lat,long format)."}
+          },
+          "required": ["farmName", "country"]
+        },
+        "processing": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "stage": {"type": "string", "enum": ["Slaughter", "Processing", "Packaging", "Export"]},
+              "date": {"type": "string", "format": "date-time"},
+              "location": {"type": "string", "description": "Facility name/address."},
+              "operator": {"type": "string", "description": "Responsible entity."}
+            },
+            "required": ["stage", "date", "location"]
+          },
+          "minItems": 1,
+          "description": "Traceable steps in the supply chain."
+        },
+        "expiryDate": {
+          "type": "string",
+          "format": "date",
+          "description": "Shelf-life expiry."
+        }
+      },
+      "required": ["origin", "processing", "expiryDate"]
+    },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "esmaCompliant": {
+          "type": "boolean",
+          "description": "Meets UAE ESMA export standards."
+        },
+        "labTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "testType": {"type": "string", "description": "e.g., 'Microbial', 'Residue'."},
+              "result": {"type": "string", "description": "Pass/Fail or value."},
+              "date": {"type": "string", "format": "date"}
+            }
+          },
+          "description": "Optional lab verification results."
+        }
+      },
+      "required": ["esmaCompliant"]
+    }
+  },
+  "required": ["id", "product", "halalCompliance", "supplyChain", "compliance"]
+}

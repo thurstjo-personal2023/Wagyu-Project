@@ -1,0 +1,43 @@
+{
+  "defaults": {
+    "version": "https://schema.openattestation.com/3.0/schema.json",
+    "@context": [
+      "https://www.w3.org/2018/credentials/v1",
+      "https://schemata.openattestation.com/com/openattestation/1.0/OpenAttestation.v3.json",
+      "https://your-domain.com/schemas/halal-wagyu-context.json"  // Host your custom @context here for extensions
+    ],
+    "type": ["VerifiableCredential", "HalalWagyuBeefCertificate"],
+    "issuanceDate": "2025-12-05T00:00:00Z",  // Use current date; auto-populate in code
+    "openAttestationMetadata": {
+      "template": {
+        "type": "EMBEDDED_RENDERER",
+        "name": "HALAL_WAGYU_CERTIFICATE",  // Custom template for rendering
+        "url": "https://generic-templates.tradetrust.io"  // Or host your own React renderer
+      },
+      "proof": {
+        "type": "OpenAttestationProofMethod",
+        "method": "DID",  // Or "DNS-TXT" for domain-based proof
+        "value": "did:ethr:0xYourIssuerAddress"  // Your company's DID
+      }
+    },
+    "issuer": {
+      "id": "did:ethr:0xYourWagyuAEAddress",
+      "name": "Wagyu AE LLC",
+      "identityProof": {
+        "type": "DNS-DID",
+        "identifier": "wagyuae.com"  // Your domain
+      }
+    }
+  },
+  "forms": [
+    {
+      "name": "Halal Wagyu Certificate",
+      "type": "VerifiableCredential",
+      "schema": "path/to/your-halal-wagyu-schema.json",  // Reference the schema file above
+      "defaults": {
+        "title": "Halal Wagyu Beef Certification",
+        "description": "Verifiable credential for UAE Halal Wagyu supply chain."
+      }
+    }
+  ]
+}
